@@ -15,6 +15,7 @@ import Pools from "./components/sections/Pools";
 import ComingSoon from "./components/sections/ComingSoon";
 import { useNavigate, useLocation } from "react-router-dom";
 import Footer from "./components/Layout/Footer";
+import LandingHero from "./components/sections/LandingHero";
 
 const App = () => {
   const navigate = useNavigate();
@@ -104,20 +105,7 @@ const App = () => {
 
   const renderContent = () => {
     if (!portfolioData.length && !loading && !error) {
-      return (
-        <div className="text-center py-16">
-          <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Wallet className="w-12 h-12 text-red-500" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Track Your Portfolio
-          </h2>
-          <p className="text-gray-500 max-w-md mx-auto">
-            Enter a wallet address to view its assets, pools, NFTs, and more on
-            the Supra blockchain.
-          </p>
-        </div>
-      );
+      return <LandingHero />;
     }
 
     switch (activeTab) {
