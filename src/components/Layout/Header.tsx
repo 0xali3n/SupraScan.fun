@@ -1,5 +1,4 @@
 import { Globe, ChevronDown, Search } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   searchInput: string;
@@ -10,6 +9,7 @@ interface HeaderProps {
   setIsNetworkDropdownOpen: (value: boolean) => void;
   handleSearch: () => void;
   loading: boolean;
+  handleLogoClick: () => void;
 }
 
 const Header = ({
@@ -21,26 +21,23 @@ const Header = ({
   setIsNetworkDropdownOpen,
   handleSearch,
   loading,
+  handleLogoClick,
 }: HeaderProps) => {
-  const navigate = useNavigate();
-
   return (
     <div className="bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <div
-              className="flex items-center hover:opacity-80 transition-opacity cursor-pointer"
-              onClick={() => navigate("/")}
+            <button
+              className="flex items-center space-x-2"
+              onClick={handleLogoClick}
             >
-              <img src="/sf.png" alt="SupraScan" className="h-8 w-8 mr-2" />
+              <img src="/sf.png" alt="SupraScan" className="h-8 w-8 mr-1" />
               <div className="flex items-baseline">
                 <h1 className="text-xl font-bold text-gray-900">SupraScan</h1>
-                <span className="text-xl font-bold bg-gradient-to-r from-red-500 to-orange-500 text-transparent bg-clip-text animate-pulse ml-0.5">
-                  .fun
-                </span>
+                <span className="text-lg font-bold text-red-500">.fun</span>
               </div>
-            </div>
+            </button>
           </div>
 
           <div className="flex items-center space-x-4">

@@ -1,4 +1,4 @@
-import { Wallet, ArrowRightLeft } from "lucide-react";
+import { Wallet } from "lucide-react";
 import { formatTokenValue } from "../../utils/tokenProcessor";
 import { TokenValue } from "../../types/token";
 import { parsePoolString } from "../../utils/poolParser";
@@ -39,7 +39,7 @@ const Pools = ({ portfolioData }: PoolsProps) => {
               {/* Token List */}
               <div className="space-y-3 mb-6 bg-white rounded-lg p-4 border border-red-100">
                 <div className="text-sm font-medium text-gray-500 mb-2">
-                  Pool Tokens
+                  Pool Tokens ({poolInfo.tokens.length})
                 </div>
                 {poolInfo.tokens.map((token, index) => (
                   <div
@@ -75,7 +75,11 @@ const Pools = ({ portfolioData }: PoolsProps) => {
               <div className="border-t border-red-100 pt-4">
                 <div className="text-sm text-gray-500 mb-1">Pool Value</div>
                 <div className="text-2xl font-bold text-gray-900">
-                  {formatTokenValue(token.value, token.name, token.isPool)}
+                  {formatTokenValue(
+                    token.value || "0",
+                    token.name,
+                    token.isPool
+                  )}
                 </div>
               </div>
             </div>

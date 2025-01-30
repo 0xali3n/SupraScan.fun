@@ -2,6 +2,7 @@ interface PoolInfo {
   type: "stable" | "weighted";
   tokens: string[];
   weights?: number[];
+  poolString: string;
 }
 
 export const parsePoolString = (poolString: string): PoolInfo => {
@@ -10,7 +11,7 @@ export const parsePoolString = (poolString: string): PoolInfo => {
   const isWeighted = poolString.includes("::weighted_pool::WeightedPoolToken");
 
   if (!isStable && !isWeighted) {
-    return { type: "stable", tokens: [] };
+    return { type: "stable", tokens: [], poolString: "" };
   }
 
   // Extract tokens
@@ -28,13 +29,16 @@ export const parsePoolString = (poolString: string): PoolInfo => {
   // Split by '8ede5b' to get individual token parts
   const tokenParts = tokenSection.split("8ede5b");
 
+  // Process each part to extract tokens and weights
   tokenParts.forEach((part) => {
     // Extract token names (TestETH, TestUSDC, etc.)
     if (part.includes("::test_")) {
       const tokenMatch = part.match(/::test_([^:]+)::/);
       if (tokenMatch && tokenMatch[1]) {
         const tokenName = "Test" + tokenMatch[1].toUpperCase();
-        tokens.push(tokenName);
+        if (!tokens.includes(tokenName)) {
+          tokens.push(tokenName);
+        }
       }
     }
 
@@ -50,12 +54,29 @@ export const parsePoolString = (poolString: string): PoolInfo => {
     }
   });
 
-  // Remove duplicates and nulls
-  const uniqueTokens = [...new Set(tokens)].filter((t) => t !== "NullType");
+  // Clean up tokens and weights
+  const uniqueTokens = tokens.filter((t) => t !== "NullType");
+  const uniqueWeights = weights.slice(0, uniqueTokens.length);
+
+  // Format pool string for API
+  const formatPoolString = () => {
+    if (uniqueTokens.length === 0) return "";
+
+    const formattedTokens = uniqueTokens
+      .map((token) => token.replace("Test", "").toLowerCase())
+      .join("");
+
+    if (isStable) {
+      return `stable_pool_${formattedTokens}`;
+    } else {
+      return `weighted_pool_${formattedTokens}_${uniqueWeights.join("")}`;
+    }
+  };
 
   return {
     type: isWeighted ? "weighted" : "stable",
     tokens: uniqueTokens,
-    ...(isWeighted && { weights: weights.filter((w) => !isNaN(w)) }),
+    ...(isWeighted && { weights: uniqueWeights }),
+    poolString: formatPoolString(),
   };
 };

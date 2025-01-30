@@ -96,6 +96,16 @@ const App = () => {
     }
   };
 
+  const handleLogoClick = () => {
+    setAddress("");
+    setPortfolioData([]);
+    setError("");
+    setTotalValue("0");
+    setActiveTab("assets");
+    setSearchInput("");
+    navigate("/");
+  };
+
   const tabs = [
     { id: "assets", name: "Assets", icon: Coins },
     { id: "pools", name: "Pools", icon: Wallet },
@@ -133,6 +143,7 @@ const App = () => {
         setIsNetworkDropdownOpen={setIsNetworkDropdownOpen}
         handleSearch={handleSearch}
         loading={loading}
+        handleLogoClick={handleLogoClick}
       />
 
       <div className="flex-grow">
