@@ -1,4 +1,3 @@
-import React from "react";
 import { User, Copy, Coins, Activity, Calendar, Wallet } from "lucide-react";
 import { TokenValue } from "../../types/token";
 import {

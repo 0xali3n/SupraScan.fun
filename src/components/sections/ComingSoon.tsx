@@ -1,4 +1,3 @@
-import React from "react";
 import { AlertCircle } from "lucide-react";
 
 const ComingSoon = ({ title }: { title: string }) => {

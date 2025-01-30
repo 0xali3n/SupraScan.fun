@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { TransactionResponse, TokenValue } from "./types/token";
 import {
@@ -6,20 +6,8 @@ import {
   fetchTokenValue,
   formatTokenValue,
 } from "./utils/tokenProcessor";
-import { getTokenIcon } from "./utils/tokenIcons";
-import {
-  Wallet,
-  Coins,
-  Activity,
-  Gem,
-  AlertCircle,
-  Copy,
-  Search,
-  Calendar,
-  User,
-  ChevronDown,
-  Globe,
-} from "lucide-react";
+
+import { Wallet, Coins, Activity, Gem } from "lucide-react";
 import Header from "./components/Layout/Header";
 import ProfileHeader from "./components/profile/ProfileHeader";
 import Assets from "./components/sections/Assets";

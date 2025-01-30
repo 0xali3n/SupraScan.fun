@@ -1,4 +1,3 @@
-import React from "react";
 import { Wallet } from "lucide-react";
 import { formatTokenValue } from "../../utils/tokenProcessor";
 import { TokenValue } from "../../types/token";

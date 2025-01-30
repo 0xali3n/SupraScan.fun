@@ -1,4 +1,3 @@
-import React from "react";
 import { getTokenIcon } from "../../utils/tokenIcons";
 import { TokenValue } from "../../types/token";
 import { TrendingUp } from "lucide-react";
