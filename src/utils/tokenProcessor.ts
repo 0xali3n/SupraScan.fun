@@ -49,24 +49,18 @@ export const formatTokenValue = (
   tokenName: string,
   isPool: boolean = false
 ): string => {
-  if (!value) return "0";
-
-  // Convert to number
+  if (!value) return "0.00";
   const numValue = Number(value);
 
-  // Determine divisor and decimal places based on token type
   if (isPool) {
-    // For pool tokens, move decimal 2 places to the left (divide by 100)
-    const poolValue = (numValue / Math.pow(10, 8)).toFixed(4);
-    return poolValue;
+    return (numValue / Math.pow(10, 8)).toFixed(4);
   } else {
-    // For regular tokens
-    const divisor = ["SupraCoin", "TestETH", "TestSOL", "TestBTC"].includes(
-      tokenName
+    const divisor = ["SUPRACOIN", "ETH", "SOL", "BTC"].includes(
+      tokenName.toUpperCase()
     )
       ? Math.pow(10, 8)
       : Math.pow(10, 6);
-    return (numValue / divisor).toString();
+    return (numValue / divisor).toFixed(2);
   }
 };
 
@@ -116,6 +110,39 @@ export const extractTokens = (data: TransactionResponse): TokenValue[] => {
     });
 };
 
+export const calculateUSDValue = (
+  value: string | undefined,
+  tokenName: string
+): string => {
+  if (!value) return "0.00";
+
+  const mockPrices: { [key: string]: number } = {
+    BTC: 106000,
+    ETH: 3200,
+    DOGE: 0.33,
+    SUPRACOIN: 0.02,
+    BONK: 0.00002535,
+    SOL: 220,
+    USDC: 1,
+    USDT: 1,
+  };
+
+  const amount = Number(value) / 1e8; // Assuming 8 decimal places
+  const normalizedName = tokenName.toUpperCase().replace("TEST", "");
+  const price = mockPrices[normalizedName] || 0;
+  const worth = amount * price;
+
+  // For values over 1 million
+  if (worth >= 1000000) {
+    return worth.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  return worth.toFixed(2);
+};
+
 export const fetchTokenValue = async (
   address: string,
   tokenString: string
@@ -126,9 +153,9 @@ export const fetchTokenValue = async (
         tokenString
       )}`
     );
-    return response.data.result[0]?.coin?.value;
+    return response.data?.result?.[0]?.coin?.value;
   } catch (err) {
     console.error("Error fetching token value:", err);
-    return undefined;
+    return "0"; // Return "0" instead of undefined for failed requests
   }
 };

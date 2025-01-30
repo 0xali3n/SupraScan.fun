@@ -1,24 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Search } from "lucide-react";
 import { TransactionResponse, TokenValue } from "./types/token";
 import {
   extractTokens,
   fetchTokenValue,
   formatTokenValue,
 } from "./utils/tokenProcessor";
+import { getTokenIcon } from "./utils/tokenIcons";
+import {
+  Wallet,
+  Coins,
+  Activity,
+  Gem,
+  AlertCircle,
+  Copy,
+  Search,
+  Calendar,
+  User,
+  ChevronDown,
+  Globe,
+} from "lucide-react";
+import Header from "./components/Layout/Header";
+import ProfileHeader from "./components/profile/ProfileHeader";
+import Assets from "./components/sections/Assets";
+import Pools from "./components/sections/Pools";
+import ComingSoon from "./components/sections/ComingSoon";
+import { useNavigate, useLocation } from "react-router-dom";
+import Footer from "./components/Layout/Footer";
 
-const TransactionViewer = () => {
+const App = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [address, setAddress] = useState("");
-  const [transactions, setTransactions] = useState<TransactionResponse | null>(
-    null
-  );
+  const [portfolioData, setPortfolioData] = useState<TokenValue[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [tokenValues, setTokenValues] = useState<TokenValue[]>([]);
+  const [totalValue, setTotalValue] = useState("0");
+  const [activeTab, setActiveTab] = useState("assets");
+  const [searchInput, setSearchInput] = useState("");
+  const [network, setNetwork] = useState("testnet");
+  const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
 
-  const fetchTransactions = async () => {
-    if (!address.trim()) {
+  useEffect(() => {
+    const addressFromPath = location.pathname.split("/profile/")[1];
+    if (addressFromPath && addressFromPath !== address) {
+      setAddress(addressFromPath);
+      fetchPortfolioData(addressFromPath);
+    }
+  }, [location.pathname]);
+
+  const fetchPortfolioData = async (addressToFetch?: string) => {
+    const targetAddress = addressToFetch || address;
+    if (!targetAddress.trim()) {
       setError("Please enter an address");
       return;
     }
@@ -27,113 +60,155 @@ const TransactionViewer = () => {
     setError("");
     try {
       const response = await axios.get<TransactionResponse>(
-        `https://rpc-testnet.supra.com/rpc/v1/accounts/${address}/resources`
+        `https://rpc-testnet.supra.com/rpc/v1/accounts/${targetAddress}/resources`
       );
 
       const tokens = extractTokens(response.data);
 
-      // Fetch values for each token
       const tokensWithValues = await Promise.all(
         tokens.map(async (token) => {
-          const value = await fetchTokenValue(address, token.fullString);
+          const value = await fetchTokenValue(targetAddress, token.fullString);
           return {
             ...token,
-            value,
+            value: value || "0", // Ensure we always have a value
           };
         })
       );
 
-      setTokenValues(tokensWithValues);
-      setTransactions(response.data);
+      const total = tokensWithValues.reduce((acc, token) => {
+        const value = token.value
+          ? Number(formatTokenValue(token.value, token.name, token.isPool))
+          : 0;
+        return acc + value;
+      }, 0);
+
+      setTotalValue(total.toFixed(2));
+      setPortfolioData(tokensWithValues);
     } catch (err) {
       console.error("API Error:", err);
-      setError(
-        "Failed to fetch transactions. Please check the address and try again."
-      );
-      setTransactions(null);
-      setTokenValues([]);
+      setError("Failed to fetch data. Please check the address and try again.");
+      setPortfolioData([]);
+      setTotalValue("0");
     } finally {
       setLoading(false);
     }
   };
 
+  const copyAddress = () => {
+    navigator.clipboard.writeText(address);
+  };
+
+  const handleSearch = () => {
+    if (searchInput.trim()) {
+      setAddress(searchInput);
+      navigate(`/profile/${searchInput}`);
+      setSearchInput("");
+      fetchPortfolioData(searchInput);
+    }
+  };
+
+  const tabs = [
+    { id: "assets", name: "Assets", icon: Coins },
+    { id: "pools", name: "Pools", icon: Wallet },
+    { id: "nfts", name: "NFTs", icon: Gem },
+    { id: "activity", name: "Activity", icon: Activity },
+  ];
+
+  const renderContent = () => {
+    if (!portfolioData.length && !loading && !error) {
+      return (
+        <div className="text-center py-16">
+          <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Wallet className="w-12 h-12 text-red-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Track Your Portfolio
+          </h2>
+          <p className="text-gray-500 max-w-md mx-auto">
+            Enter a wallet address to view its assets, pools, NFTs, and more on
+            the Supra blockchain.
+          </p>
+        </div>
+      );
+    }
+
+    switch (activeTab) {
+      case "assets":
+        return <Assets portfolioData={portfolioData} />;
+      case "pools":
+        return <Pools portfolioData={portfolioData} />;
+      case "nfts":
+        return <ComingSoon title="NFTs" />;
+      case "activity":
+        return <ComingSoon title="Transaction History" />;
+      default:
+        return <Assets portfolioData={portfolioData} />;
+    }
+  };
+
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
-      <div className="flex gap-4">
-        <div className="relative flex-1">
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Enter address..."
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-        <button
-          onClick={fetchTransactions}
-          disabled={loading}
-          className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-        >
-          <Search size={20} />
-          {loading ? "Loading..." : "Search"}
-        </button>
-      </div>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Header
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        network={network}
+        setNetwork={setNetwork}
+        isNetworkDropdownOpen={isNetworkDropdownOpen}
+        setIsNetworkDropdownOpen={setIsNetworkDropdownOpen}
+        handleSearch={handleSearch}
+        loading={loading}
+      />
 
-      {error && (
-        <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-          {error}
-        </div>
-      )}
-
-      {loading && (
-        <div className="flex justify-center p-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        </div>
-      )}
-
-      {transactions && (
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold">Available Tokens</h2>
-          <div className="border rounded-lg overflow-hidden">
-            {tokenValues.map((token, index) => (
-              <div
-                key={token.fullString}
-                className={`flex flex-col ${
-                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                } border-b last:border-b-0`}
-              >
-                <div className="flex">
-                  <div className="w-16 py-3 px-4 text-gray-500 border-r">
-                    {index + 1}
-                  </div>
-                  <div className="flex-1 p-3">
-                    <div className="flex justify-between items-center mb-1">
-                      <div className="flex flex-col">
-                        <span className="font-medium text-gray-700">
-                          {token.name}
-                        </span>
-                      </div>
-                      <span className="text-green-600 font-medium">
-                        Balance:{" "}
-                        {formatTokenValue(
-                          token.value,
-                          token.name,
-                          token.isPool
-                        )}
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-500 break-all">
-                      {token.fullString}
-                    </div>
-                  </div>
+      <div className="flex-grow">
+        {portfolioData.length > 0 && (
+          <>
+            <ProfileHeader
+              address={address}
+              network={network}
+              copyAddress={copyAddress}
+              totalValue={totalValue}
+              portfolioData={portfolioData}
+            />
+            {/* Navigation Tabs */}
+            <nav className="border-b border-gray-200 bg-white sticky top-0 z-10 shadow-sm">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex space-x-8">
+                  {tabs.map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center space-x-2 py-4 px-1 border-b-2 text-sm font-medium ${
+                        activeTab === tab.id
+                          ? "border-red-500 text-red-500"
+                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      }`}
+                    >
+                      <tab.icon className="w-4 h-4" />
+                      <span>{tab.name}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
-            ))}
+            </nav>
+          </>
+        )}
+
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-16">
+          {error && (
+            <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+              {error}
+            </div>
+          )}
+
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            {renderContent()}
           </div>
-        </div>
-      )}
+        </main>
+      </div>
+
+      <Footer />
     </div>
   );
 };
 
-export default TransactionViewer;
+export default App;
