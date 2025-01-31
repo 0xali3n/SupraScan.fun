@@ -429,7 +429,7 @@ const TransactionActivity: React.FC<TransactionActivityProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [transactionType, setTransactionType] = useState<string>("all");
-  const [count, setCount] = useState<number>(20);
+  const [count, ] = useState<number>(20);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const transactionsPerPage = 10;
 

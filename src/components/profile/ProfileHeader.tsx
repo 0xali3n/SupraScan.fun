@@ -12,6 +12,7 @@ interface ProfileHeaderProps {
   network: string;
   copyAddress: () => void;
   portfolioData: TokenValue[];
+  totalValue: string;
   transactions?: any[];
 }
 

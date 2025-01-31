@@ -154,8 +154,8 @@ const App = () => {
               address={address}
               network={network}
               copyAddress={copyAddress}
-              totalValue={totalValue}
               portfolioData={portfolioData}
+              totalValue={totalValue}
             />
             {/* Navigation Tabs */}
             <nav className="border-b border-gray-200 bg-white sticky top-0 z-10 shadow-sm overflow-x-auto">
