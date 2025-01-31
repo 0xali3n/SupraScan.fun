@@ -16,6 +16,7 @@ import ComingSoon from "./components/sections/ComingSoon";
 import { useNavigate, useLocation } from "react-router-dom";
 import Footer from "./components/Layout/Footer";
 import LandingHero from "./components/sections/LandingHero";
+import TransactionActivity from "./components/sections/TransactionActivity";
 
 const App = () => {
   const navigate = useNavigate();
@@ -126,7 +127,7 @@ const App = () => {
       case "nfts":
         return <ComingSoon title="NFTs" />;
       case "activity":
-        return <ComingSoon title="Transaction History" />;
+        return <TransactionActivity address={address} />;
       default:
         return <Assets portfolioData={portfolioData} />;
     }
@@ -157,20 +158,20 @@ const App = () => {
               portfolioData={portfolioData}
             />
             {/* Navigation Tabs */}
-            <nav className="border-b border-gray-200 bg-white sticky top-0 z-10 shadow-sm">
+            <nav className="border-b border-gray-200 bg-white sticky top-0 z-10 shadow-sm overflow-x-auto">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex space-x-8">
+                <div className="flex justify-center space-x-4 md:space-x-8">
                   {tabs.map((tab) => (
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center space-x-2 py-4 px-1 border-b-2 text-sm font-medium ${
+                      className={`flex items-center space-x-1 md:space-x-2 py-3 md:py-4 px-2 md:px-3 border-b-2 text-xs sm:text-sm font-medium whitespace-nowrap ${
                         activeTab === tab.id
                           ? "border-red-500 text-red-500"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                       }`}
                     >
-                      <tab.icon className="w-4 h-4" />
+                      <tab.icon className="w-3 h-3 md:w-4 md:h-4" />
                       <span>{tab.name}</span>
                     </button>
                   ))}
@@ -180,14 +181,14 @@ const App = () => {
           </>
         )}
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-16">
+        <main className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-12 mb-8 md:mb-16">
           {error && (
-            <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+            <div className="mb-4 md:mb-8 p-3 md:p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm md:text-base">
               {error}
             </div>
           )}
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6">
             {renderContent()}
           </div>
         </main>

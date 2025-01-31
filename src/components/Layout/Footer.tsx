@@ -12,10 +12,10 @@ const Footer = () => {
         </div>
 
         {/* Content */}
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-white/50 backdrop-blur-sm">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 bg-white/50 backdrop-blur-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {/* About Section */}
-            <div className="col-span-1">
+            <div className="col-span-1 sm:col-span-2 md:col-span-1">
               <motion.div
                 className="flex items-center"
                 whileHover={{ scale: 1.02 }}
@@ -26,13 +26,13 @@ const Footer = () => {
                     <img
                       src="/sf.png"
                       alt="SupraScan"
-                      className="h-8 w-8 mr-2"
+                      className="h-6 sm:h-8 w-6 sm:w-8 mr-2"
                     />
                     <div className="flex items-baseline">
-                      <span className="text-lg font-bold text-gray-900">
+                      <span className="text-lg sm:text-xl font-bold text-gray-900">
                         SupraScan
                       </span>
-                      <span className="text-lg font-bold bg-gradient-to-r from-red-500 to-orange-500 text-transparent bg-clip-text animate-pulse">
+                      <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-red-500 to-orange-500 text-transparent bg-clip-text animate-pulse">
                         .fun
                       </span>
                     </div>
@@ -141,8 +141,8 @@ const Footer = () => {
 
       {/* Bottom bar - made darker */}
       <div className="bg-gradient-to-r from-red-100/30 to-orange-100/30 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 backdrop-blur-sm">
-          <p className="text-sm text-gray-600 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 backdrop-blur-sm">
+          <p className="text-xs sm:text-sm text-gray-600 text-center">
             © {new Date().getFullYear()} SupraScan. All rights reserved.
           </p>
         </div>

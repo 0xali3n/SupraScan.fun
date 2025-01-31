@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { getTokenIcon } from "../../utils/tokenIcons";
 import { TokenValue } from "../../types/token";
 import { TrendingUp } from "lucide-react";
@@ -13,35 +14,83 @@ interface AssetsProps {
 }
 
 const Assets = ({ portfolioData }: AssetsProps) => {
+  const [prices, setPrices] = useState<{ [key: string]: number }>({});
+  const [worths, setWorths] = useState<{ [key: string]: number }>({});
+
+  useEffect(() => {
+    const fetchPrices = async () => {
+      const pricePromises = portfolioData
+        .filter((token) => !token.isPool)
+        .map(async (token) => {
+          const price = await calculateTokenPrice(token.name);
+          return { name: token.name, price };
+        });
+
+      const resolvedPrices = await Promise.all(pricePromises);
+      const priceMap = resolvedPrices.reduce((acc, { name, price }) => {
+        acc[name] = price;
+        return acc;
+      }, {} as { [key: string]: number });
+
+      setPrices(priceMap);
+    };
+
+    fetchPrices();
+  }, [portfolioData]);
+
+  useEffect(() => {
+    const fetchWorths = async () => {
+      const worthPromises = portfolioData
+        .filter((token) => !token.isPool)
+        .map(async (token) => {
+          const worth = await calculateTokenWorth(
+            token.value || "0",
+            token.name
+          );
+          return { name: token.name, worth };
+        });
+
+      const resolvedWorths = await Promise.all(worthPromises);
+      const worthMap = resolvedWorths.reduce((acc, { name, worth }) => {
+        acc[name] = worth;
+        return acc;
+      }, {} as { [key: string]: number });
+
+      setWorths(worthMap);
+    };
+
+    fetchWorths();
+  }, [portfolioData]);
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
       {portfolioData
         .filter((token) => !token.isPool)
         .map((token) => {
-          const tokenPrice = calculateTokenPrice(token.name);
-          const worth = calculateTokenWorth(token.value || "0", token.name);
+          const worth = worths[token.name] || 0;
           const balance = formatBalance(token.value || "0", token.name);
+          const tokenPrice = prices[token.name] || 0;
 
           return (
             <div
               key={token.fullString}
-              className="bg-white rounded-xl p-6 border border-gray-200 hover:border-red-200 transition-all hover:shadow-lg transform hover:-translate-y-1"
+              className="bg-white rounded-xl p-4 sm:p-6 border border-gray-200 hover:border-red-200 transition-all hover:shadow-lg transform hover:-translate-y-1"
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   <img
                     src={getTokenIcon(token.name)}
                     alt={token.name}
-                    className="w-12 h-12 rounded-full"
+                    className="w-8 sm:w-10 h-8 sm:h-10 rounded-full"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "/logo/default.png";
                     }}
                   />
                   <div>
-                    <div className="font-semibold text-gray-900 text-lg">
+                    <div className="font-semibold text-gray-900 text-base sm:text-lg">
                       {token.name}
                     </div>
-                    <div className="text-sm text-gray-500 flex items-center">
+                    <div className="text-xs sm:text-sm text-gray-500 flex items-center">
                       <TrendingUp className="w-3 h-3 mr-1" />$
                       {tokenPrice.toLocaleString()} USD
                     </div>

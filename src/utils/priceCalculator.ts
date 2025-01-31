@@ -32,8 +32,34 @@ export const getTokenDecimals = (tokenName: string): number => {
   }
 };
 
-export const calculateTokenPrice = (tokenName: string): number => {
+export const fetchTokenPrice = async (tokenName: string): Promise<number> => {
+  const response = await fetch(
+    `https://prod-kline-rest.supra.com/latest?trading_pair=${tokenName.toLowerCase()}_usdt`,
+    {
+      headers: {
+        "x-api-key":
+          "356464a14d94ec3c455480727eee9c4fd58233bfd8cdeb1701d2aec132d4d670",
+      },
+    }
+  );
+  const data = await response.json();
+
+  console.log(data); // Log the entire response to inspect its structure
+
+  // Extract the current price from the response
+  const currentPrice = data.instruments[0]?.currentPrice; // Use optional chaining to avoid errors
+  return currentPrice ? parseFloat(currentPrice) : 0; // Convert to number or return 0 if not available
+};
+
+export const calculateTokenPrice = async (
+  tokenName: string
+): Promise<number> => {
   const normalizedName = tokenName.toUpperCase().replace("TEST", "");
+  if (normalizedName === "BTC") {
+    const price = await fetchTokenPrice(normalizedName);
+    console.log(`Displayed price for ${normalizedName}:`, price); // Log the price being displayed
+    return price;
+  }
   return TOKEN_PRICES[normalizedName] || 0;
 };
 
@@ -44,14 +70,14 @@ export const formatBalance = (balance: string, tokenName: string): string => {
   return amount.toFixed(2);
 };
 
-export const calculateTokenWorth = (
+export const calculateTokenWorth = async (
   balance: string,
   tokenName: string
-): number => {
+): Promise<number> => {
   if (!balance) return 0;
   const decimals = getTokenDecimals(tokenName);
   const amount = Number(balance) / Math.pow(10, decimals);
-  const price = calculateTokenPrice(tokenName);
+  const price = await calculateTokenPrice(tokenName);
   return amount * price;
 };
 

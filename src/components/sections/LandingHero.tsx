@@ -60,7 +60,7 @@ const LandingHero = () => {
           transition={{ duration: 0.8 }}
           className="text-center"
         >
-          <h1 className="text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl sm:text-6xl font-bold text-gray-900 mb-6">
             Explore the{" "}
             <span className="bg-gradient-to-r from-red-500 to-orange-500 text-transparent bg-clip-text">
               Supra Network

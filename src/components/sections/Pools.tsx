@@ -9,7 +9,7 @@ interface PoolsProps {
 
 const Pools = ({ portfolioData }: PoolsProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       {portfolioData
         .filter((token) => token.isPool)
         .map((token) => {
@@ -18,11 +18,11 @@ const Pools = ({ portfolioData }: PoolsProps) => {
           return (
             <div
               key={token.fullString}
-              className="bg-gradient-to-br from-red-50 to-orange-50 rounded-xl p-6 border border-red-100 hover:shadow-md transition-all"
+              className="bg-gradient-to-br from-red-50 to-orange-50 rounded-xl p-4 sm:p-6 border border-red-100 hover:shadow-md transition-all"
             >
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                  <Wallet className="w-6 h-6 text-red-500" />
+              <div className="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div className="w-10 sm:w-12 h-10 sm:h-12 bg-red-100 rounded-full flex items-center justify-center">
+                  <Wallet className="w-5 sm:w-6 h-5 sm:h-6 text-red-500" />
                 </div>
                 <div>
                   <div className="font-medium text-gray-900">
