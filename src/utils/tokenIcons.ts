@@ -1,73 +1,32 @@
-// Helper function to normalize token names for icons
+const TOKEN_MAPPINGS: Record<string, string> = {
+  BTC: 'btc',
+  BITCOIN: 'btc',
+  BITCOINCOIN: 'btc',
+  ETH: 'eth',
+  ETHEREUM: 'eth',
+  ETHEREUMCOIN: 'eth',
+  SOL: 'sol',
+  SOLANA: 'sol',
+  SOLANACOIN: 'sol',
+  USDC: 'usdc',
+  USDCCOIN: 'usdc',
+  SUPRA: 'supra',
+  SUPRACOIN: 'supra',
+  SupraCoin: 'supra',
+  USDT: 'usdt',
+  TETHER: 'usdt',
+  BONK: 'bonk',
+  BONKCOIN: 'bonk',
+  DOGE: 'doge',
+  DOGECOIN: 'doge',
+};
+
 export const normalizeTokenName = (name: string): string => {
   // Remove 'Test' prefix and convert to uppercase
-  name = name.replace(/^test/i, "").toUpperCase();
-
-  // Handle special cases and variations
-  switch (name) {
-    case "TESTBTC":
-      return "btc";
-    case "BTC":
-      return "btc";
-    case "BITCOIN":
-      return "btc";
-    case "BITCOINCOIN":
-      return "btc";
-    case "TESTETH":
-      return "eth";
-    case "ETH":
-      return "eth";
-    case "ETHEREUM":
-      return "eth";
-    case "ETHEREUMCOIN":
-      return "eth";
-    case "TESTSOL":
-      return "sol";
-    case "SOL":
-      return "sol";
-    case "SOLANA":
-      return "sol";
-    case "SOLANACOIN":
-      return "sol";
-    case "TESTUSDC":
-      return "usdc";
-    case "USDC":
-      return "usdc";
-    case "USDCCOIN":
-      return "usdc";
-    case "TESTSUPRA":
-      return "supra";
-    case "SUPRA":
-      return "supra";
-    case "SUPRACOIN":
-      return "supra";
-    case "TESTUSDT":
-      return "usdt";
-    case "USDT":
-      return "usdt";
-    case "TETHER":
-      return "usdt";
-    case "TESTBONK":
-      return "bonk";
-    case "BONK":
-      return "bonk";
-    case "BONKCOIN":
-      return "bonk";
-    case "TESTDOGE":
-      return "doge";
-    case "DOGE":
-      return "doge";
-    case "DOGECOIN":
-      return "doge";
-    case "TESTBITCOINCOIN":
-      return "btc";
-    case "TESTETHEREUMCOIN":
-      return "eth";
-    case "ETHEREUMCOIN":
-      return "eth";
-    default:
-      return name.toLowerCase();
-  }
+  const cleanName = name.replace(/^test/i, '').toUpperCase();
+  
+  // Return mapped value or lowercase original if not found
+  return TOKEN_MAPPINGS[cleanName] || cleanName.toLowerCase();
 };
 
 export const getTokenIcon = (tokenName: string): string => {

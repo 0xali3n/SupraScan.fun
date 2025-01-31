@@ -16,7 +16,7 @@ interface AssetsProps {
 const Assets = ({ portfolioData }: AssetsProps) => {
   const [prices, setPrices] = useState<{ [key: string]: number }>({});
   const [worths, setWorths] = useState<{ [key: string]: number }>({});
-
+  console.log("this is the portfolioData", portfolioData);
   useEffect(() => {
     const fetchPrices = async () => {
       const pricePromises = portfolioData

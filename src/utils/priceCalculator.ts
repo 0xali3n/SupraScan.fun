@@ -67,12 +67,12 @@ export const calculateTokenPrice = async (
   const apiName = normalizedName.toUpperCase();
   
   // Check for all supported tokens
-  if (['BTC', 'ETH', 'SOL', 'USDC', 'USDT'].includes(apiName)) {
+  if (['BTC', 'ETH', 'SOL', 'USDC', 'SUPRA'].includes(apiName)) {
     const price = await fetchTokenPrice(apiName);
     console.log(`Displayed price for ${apiName}:`, price);
     return price;
   }
-  
+  console.log("this is the apiName", apiName);
   return TOKEN_PRICES[apiName] || 0;
 };
 

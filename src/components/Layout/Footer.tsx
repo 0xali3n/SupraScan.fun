@@ -46,7 +46,9 @@ const Footer = () => {
               <div className="mt-6 flex space-x-4">
                 <motion.a
                   whileHover={{ scale: 1.1, rotate: 5 }}
-                  href="#"
+                  href="https://x.com/suprascan"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-gradient-to-br from-red-50 to-orange-50 p-2 rounded-full text-red-500 hover:text-red-600 transition-colors"
                 >
                   <Twitter className="w-5 h-5" />
@@ -54,6 +56,8 @@ const Footer = () => {
                 <motion.a
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-gradient-to-br from-red-50 to-orange-50 p-2 rounded-full text-red-500 hover:text-red-600 transition-colors"
                 >
                   <Github className="w-5 h-5" />
@@ -61,6 +65,8 @@ const Footer = () => {
                 <motion.a
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-gradient-to-br from-red-50 to-orange-50 p-2 rounded-full text-red-500 hover:text-red-600 transition-colors"
                 >
                   <Mail className="w-5 h-5" />
@@ -124,10 +130,10 @@ const Footer = () => {
               <ul className="mt-4 space-y-4">
                 <motion.li whileHover={{ x: 2 }}>
                   <a
-                    href="mailto:support@suprascan.fun"
+                    href="mailto:suprascan.fun@gmail.com"
                     className="text-base text-gray-500 hover:text-red-500 transition-colors"
                   >
-                    support@suprascan.fun
+                    suprascan.fun@gmail.com
                   </a>
                 </motion.li>
                 <li className="text-base text-gray-500">
