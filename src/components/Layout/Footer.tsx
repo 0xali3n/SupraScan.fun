@@ -104,7 +104,8 @@ const Footer = () => {
               <ul className="mt-4 space-y-4">
                 <motion.li whileHover={{ x: 2 }}>
                   <a
-                    href="#"
+                    href="https://docs.suprascan.fun"
+                    target="_blank"
                     className="text-base text-gray-500 hover:text-red-500 flex items-center group transition-colors"
                   >
                     Documentation
@@ -113,7 +114,8 @@ const Footer = () => {
                 </motion.li>
                 <motion.li whileHover={{ x: 2 }}>
                   <a
-                    href="#"
+                    href="https://docs.suprascan.fun"
+                    target="_blank"
                     className="text-base text-gray-500 hover:text-red-500 flex items-center group transition-colors"
                   >
                     API Service
