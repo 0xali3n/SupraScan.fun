@@ -1,3 +1,5 @@
+import { normalizeTokenName } from "./tokenIcons";
+
 interface TokenPrices {
   [key: string]: number;
 }
@@ -18,11 +20,15 @@ export const getTokenDecimals = (tokenName: string): number => {
   const normalizedName = tokenName.toUpperCase().replace("TEST", "");
   switch (normalizedName) {
     case "BTC":
+      return 8;
     case "ETH":
+      return 8;
     case "SOL":
+      return 8;
     case "SUPRACOIN":
       return 8;
     case "USDC":
+      return 6;
     case "USDT":
       return 6;
     case "BONK":
@@ -54,13 +60,20 @@ export const fetchTokenPrice = async (tokenName: string): Promise<number> => {
 export const calculateTokenPrice = async (
   tokenName: string
 ): Promise<number> => {
-  const normalizedName = tokenName.toUpperCase().replace("TEST", "");
-  if (normalizedName === "BTC") {
-    const price = await fetchTokenPrice(normalizedName);
-    console.log(`Displayed price for ${normalizedName}:`, price); // Log the price being displayed
+  // Use the same normalizeTokenName function from tokenIcons.ts
+  const normalizedName = normalizeTokenName(tokenName);
+  
+  // Convert normalized name to uppercase for API call
+  const apiName = normalizedName.toUpperCase();
+  
+  // Check for all supported tokens
+  if (['BTC', 'ETH', 'SOL', 'USDC', 'USDT'].includes(apiName)) {
+    const price = await fetchTokenPrice(apiName);
+    console.log(`Displayed price for ${apiName}:`, price);
     return price;
   }
-  return TOKEN_PRICES[normalizedName] || 0;
+  
+  return TOKEN_PRICES[apiName] || 0;
 };
 
 export const formatBalance = (balance: string, tokenName: string): string => {
