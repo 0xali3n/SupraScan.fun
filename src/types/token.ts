@@ -6,10 +6,13 @@ export interface TransactionResponse {
 }
 
 export interface TokenValue {
-  name: string;
-  isPool: boolean;
-  fullString: string;
-  value?: string;
+    name: string;
+    isPool: boolean;
+    fullString: string;
+    icon: string;
+    value: string;
+    formattedValue: string;
+    usdValue: string;
 }
 
 export interface CoinResponse {

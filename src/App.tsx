@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { TransactionResponse, TokenValue } from "./types/token";
-import {
-  extractTokens,
-  fetchTokenValue,
-  formatTokenValue,
-} from "./utils/tokenProcessor";
+import {  TokenValue } from "./types/token";
+
 
 import { Wallet, Coins, Activity, Gem } from "lucide-react";
 import Header from "./components/Layout/Header";
@@ -30,6 +26,7 @@ const App = () => {
   const [searchInput, setSearchInput] = useState("");
   const [network, setNetwork] = useState("testnet");
   const [isNetworkDropdownOpen, setIsNetworkDropdownOpen] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const addressFromPath = location.pathname.split("/profile/")[1];
@@ -49,31 +46,23 @@ const App = () => {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.get<TransactionResponse>(
-        `https://rpc-testnet.supra.com/rpc/v1/accounts/${targetAddress}/resources`
+      const response = await axios.get(
+        `${API_URL}/tokens/portfolio?address=${targetAddress}`,
+        {
+          headers: {
+            'x-api-key': import.meta.env.VITE_API_KEY,
+          }
+        }
       );
-
-      const tokens = extractTokens(response.data);
-
-      const tokensWithValues = await Promise.all(
-        tokens.map(async (token) => {
-          const value = await fetchTokenValue(targetAddress, token.fullString);
-          return {
-            ...token,
-            value: value || "0", // Ensure we always have a value
-          };
-        })
-      );
-
-      const total = tokensWithValues.reduce((acc, token) => {
-        const value = token.value
-          ? Number(formatTokenValue(token.value, token.name, token.isPool))
-          : 0;
-        return acc + value;
+      console.log("This is the raw response", response);
+      const data = await response.data;
+      const tokens = data.data
+      console.log("this si the tokens data in app.tsx", tokens);
+      const total = tokens.reduce((acc: number, token: any) => {
+        return acc + (token.usdValue ? Number(token.usdValue) : 0);
       }, 0);
-
       setTotalValue(total.toFixed(2));
-      setPortfolioData(tokensWithValues);
+      setPortfolioData(tokens);
     } catch (err) {
       console.error("API Error:", err);
       setError("Failed to fetch data. Please check the address and try again.");
