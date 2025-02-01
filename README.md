@@ -60,7 +60,7 @@ SupraScan.Fun provides a **powerful API** that allows developers to seamlessly *
 ## ⭕ SupraScan.fun looks
 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
   <img width="500" alt="cover" src="https://github.com/user-attachments/assets/3b71c6d3-a277-43ee-9a18-42023f2dc5a9" />
-  <img width="500" alt="111111" src="https://github.com/user-attachments/assets/e3b8f8c7-3866-41ca-9233-f0ea4135be5f" />
+ <img width="500" alt="image" src="https://github.com/user-attachments/assets/13f18b83-ca29-4e01-8d6e-e811cc80a0d6" />
   <img width="500" alt="222222" src="https://github.com/user-attachments/assets/5d15a49a-02ea-461e-98f9-b41aefa964f4" />
   <img width="500" alt="333333" src="https://github.com/user-attachments/assets/8f310559-95bf-4830-8325-f12ea4d3bdef" />
   <img width="500" alt="444444" src="https://github.com/user-attachments/assets/b06e59d7-898a-48ea-a339-9e67c997d484" />
