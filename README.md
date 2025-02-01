@@ -36,7 +36,11 @@
 
 
 
-https://github.com/user-attachments/assets/63e90f9c-d1de-49aa-a94c-b5625314cfa3
+
+https://github.com/user-attachments/assets/cd96517b-3ab3-499b-b7be-4dff48b88787
+
+
+
 
 
 For HD full view: https://player.vimeo.com/video/1052387378?h=a3f4e5a2b6
