@@ -29,7 +29,7 @@
 
 ---
 
-## 🔗 Live VIdeo  
+## 🔗 Live Video  
 
 
 
